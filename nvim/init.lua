@@ -966,6 +966,31 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
+  {
+    'aaronhallaert/advanced-git-search.nvim',
+    cmd = { 'AdvancedGitSearch' },
+    keys = {
+      { '<leader>gs', '<cmd>AdvancedGitSearch<CR>', desc = 'Git Search' },
+    },
+    dependencies = {
+      'nvim-telescope/telescope.nvim',
+      'tpope/vim-fugitive',
+      'tpope/vim-rhubarb',
+    },
+    config = function()
+      require('telescope').setup {
+        extensions = {
+          advanced_git_search = {
+            keymaps = {
+              toggle_date_author = '<C-w>',
+              show_entire_commit = '<C-e>',
+            },
+          },
+        },
+      }
+      require('telescope').load_extension 'advanced_git_search'
+    end,
+  },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
