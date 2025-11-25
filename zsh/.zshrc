@@ -115,6 +115,8 @@ source /Users/pjt/.oh-my-zsh/powerlevel10k/powerlevel10k.zsh-theme
 source /Users/pjt/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # ------------------------------------------------------------------
 plugins=(git zsh-syntax-highlighting)
+
+export GPG_TTY=$TTY
 # Intellij setting
 export PATH="/Applications/IntelliJ IDEA.app/Contents/MacOS:$PATH"
 # pyenv setting
