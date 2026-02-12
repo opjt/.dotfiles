@@ -163,3 +163,5 @@ eval "$(rbenv init -)"
 [[ -f /Users/pjt/.dart-cli-completion/zsh-config.zsh ]] && . /Users/pjt/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
+alias nerdma="nerdctl.lima"
+export KUBECONFIG=~/.kube/config:~/.kube/k3s_config.yaml

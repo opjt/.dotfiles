@@ -671,7 +671,6 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
         gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -892,6 +891,12 @@ require('lazy').setup({
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
+        on_highlights = function(hl, c)
+          hl.Comment = {
+            fg = c.dark5, -- 원하는 색으로 변경
+            italic = false,
+          }
+        end,
       }
 
       -- Load the colorscheme here.
@@ -1045,3 +1050,8 @@ require('lazy').setup({
 
 -- custom keymap
 require 'custom.keymap'
+
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = false
