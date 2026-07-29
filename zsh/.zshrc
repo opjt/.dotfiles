@@ -163,5 +163,10 @@ eval "$(rbenv init -)"
 [[ -f /Users/pjt/.dart-cli-completion/zsh-config.zsh ]] && . /Users/pjt/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
-alias nerdma="nerdctl.lima"
-export KUBECONFIG=~/.kube/config:~/.kube/k3s_config.yaml
+alias nd="nerdctl.lima"
+
+export KUBECONFIG=$(find ~/.kube/configs -name "*.yaml" | tr '\n' ':')
+
+alias k="kubectl"
+alias cc="claude"
+eval "$(zoxide init zsh)"
