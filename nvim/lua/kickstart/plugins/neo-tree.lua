@@ -14,6 +14,7 @@ return {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
+    default_source = 'last', -- \ 로 열 때 마지막에 전환했던 소스(filesystem/buffers/git_status)를 유지
     filesystem = {
       filtered_items = {
         visible = true,

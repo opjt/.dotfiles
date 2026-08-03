@@ -672,7 +672,30 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         gopls = {},
-        -- pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                -- ruff가 unused import/variable을 이미 잡아주므로 pyright에서는 꺼서 중복 경고 방지
+                diagnosticSeverityOverrides = {
+                  reportUnusedImport = 'none',
+                  reportUnusedVariable = 'none',
+                },
+              },
+            },
+          },
+          before_init = function(_, config)
+            local venv_python = config.root_dir .. '/.venv/bin/python'
+            if vim.uv.fs_stat(venv_python) then
+              -- Mutate in place (not `config.settings = ...`): the client already
+              -- snapshotted a reference to this same table as `self.settings`,
+              -- which is what actually gets sent via workspace/didChangeConfiguration.
+              config.settings = config.settings or {}
+              config.settings.python = config.settings.python or {}
+              config.settings.python.pythonPath = venv_python
+            end
+          end,
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -718,19 +741,19 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      -- Apply capabilities to every server, then per-server overrides (settings, on_new_config, etc.)
+      -- via vim.lsp.config, since this version of mason-lspconfig no longer supports the old
+      -- `.setup({ handlers = ... })` API (it silently ignores that key).
+      vim.lsp.config('*', { capabilities = capabilities })
+      for server_name, server_opts in pairs(servers) do
+        vim.lsp.config(server_name, server_opts)
+      end
+
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
+        -- automatic_enable (default true) calls vim.lsp.enable() for every Mason-installed
+        -- server, picking up the vim.lsp.config() overrides set above.
       }
     end,
   },
@@ -770,6 +793,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         c = { 'clangd' },
         markdown = { 'prettier' },
+        python = { 'ruff_format' }, -- ruff만 포맷 담당 (lint 자동수정/organize imports는 custom/keymap.lua의 BufWritePre에서 처리, pyright은 타입체크 전용)
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -948,6 +972,7 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'master', -- main은 rewrite된 신규 API라 configs.lua가 없음, 구 API가 살아있는 master로 고정
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
