@@ -14,6 +14,15 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- nvim/ (incl. lazy-lock.json) is shared read-only from the mac host into
+-- lima guests. lazy.nvim rewrites the lockfile after every install/update,
+-- even when nothing changed, which fails on a read-only mount. On guests,
+-- keep installing exactly what the lockfile (written by the host) pins,
+-- but skip the write.
+if (vim.uv or vim.loop).os_uname().sysname == "Linux" then
+  require("lazy.manage.lock").update = function() end
+end
+
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
