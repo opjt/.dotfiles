@@ -168,5 +168,9 @@ alias nd="nerdctl.lima"
 export KUBECONFIG=$(find ~/.kube/configs -name "*.yaml" | tr '\n' ':')
 
 alias k="kubectl"
-alias cc="claude"
+
 eval "$(zoxide init zsh)"
+cc() {
+    zi || return
+    exec claude
+}
