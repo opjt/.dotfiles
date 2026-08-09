@@ -172,5 +172,5 @@ alias k="kubectl"
 eval "$(zoxide init zsh)"
 cc() {
     zi || return
-    exec claude
+    claude "$@"
 }
