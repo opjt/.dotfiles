@@ -119,15 +119,10 @@ plugins=(git zsh-syntax-highlighting)
 export GPG_TTY=$TTY
 # Intellij setting
 export PATH="/Applications/IntelliJ IDEA.app/Contents/MacOS:$PATH"
-# pyenv setting
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
 # JAVA setting
 #export JAVA_HOME="/Library/Java/JavaVirtualMachines/temurin-8.jdk/Contents/Home"
 #export PATH="$JAVA_HOME/bin:$PATH"
 
-export PATH="$HOME/go/bin:$PATH"
 export CFLAGS="-I/opt/homebrew/opt/freetds/include"
 export LDFLAGS="-L/opt/homebrew/opt/freetds/lib"
 export PATH="/Users/pjt/.local/bin:$PATH"
@@ -174,3 +169,4 @@ cc() {
     zi || return
     claude "$@"
 }
+alias python=python3
